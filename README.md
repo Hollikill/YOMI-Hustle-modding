@@ -2,7 +2,7 @@
 
 ## Mirror+
 
-![mirrorplusthumbnail](https://github.com/Hollikill/YOMI-Hustle-modding/Mirror+%20Mod%20Resources/yomimirrorthumbnailv2.png)
+![mirrorplusthumbnail](https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/Mirror%2B%20Mod%20Resources/yomimirrorthumbnailv2.png)
 
 A mod that allows you to mirror your opponent's selection of character and style, with toggle options for each.
 
@@ -12,7 +12,7 @@ The [steam workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id
 
 ## StyleSteal
 
-![stylestealthumbnail](https://github.com/Hollikill/YOMI-Hustle-modding/StyleSteal%20Mod%20Resources/yomistylestealthumbnail.png)
+![stylestealthumbnail](https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/StyleSteal%20Mod%20Resources/yomistylestealthumbnail.png)
 
 A mod for my personal use. It allows you to steal the style of your opponents and alter it a little bit, and also save the original for later use.
 
