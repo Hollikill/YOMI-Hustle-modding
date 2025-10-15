@@ -1,0 +1,13 @@
+{
+  "name": "mirrorplus",
+  "friendly_name": "Mirror+",
+  "description": "Allows you to mirror the opponent's style or character, with toggle options for each.\n\nInspired by cat's Perfect Mirror mod [color=blue]https://steamcommunity.com/sharedfiles/filedetails/?id=3296713084[color=white]",
+  "author": "Hollikill (https://hollikill.net)",
+  "version": "1.0",
+  "link": "",
+  "id": "3585394092",
+  "requires": ["soupModOptions"],
+  "overwrites": false,
+  "client_side": true,
+  "priority": -10002
+}

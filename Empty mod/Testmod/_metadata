@@ -1,0 +1,13 @@
+{
+  "name": "testmod",
+  "friendly_name": "Testmod",
+  "description": "mod description",
+  "author": "Hollikill (https://hollikill.net)",
+  "version": "1.0",
+  "link": "",
+  "id": "349169601827",
+  "requires": ["soupModOptions"],
+  "overwrites": false,
+  "client_side": true,
+  "priority": -10002
+}

@@ -1,0 +1,96 @@
+# assumes RGB is in a 0-1 format
+# stores colors in Vector3() format
+# RGB: Vector3(r, g, b)
+# Oklch: Vector3(L, c, h)
+
+#--------------------------------------------------------------
+
+func process():
+	var style = get_style()
+
+	var colors = get_style_colors(style)
+
+	for color in colors:
+		if option_invert:
+			color = invertRGB(color)
+		if option_grayscale:
+			oklchColor = toOklch(color)
+			# reduce chroma by an order of magnitude
+			oklchColor.y = oklchColor.y/10
+			color = toRGB(oklchColor)
+	
+	replace_style_colors(style, colors)
+
+	return style
+
+#--------------------------------------------------------------
+
+func invertRGB(Vector3 vec):
+	return Vector3( 1-vec.x,
+			1-vec.y,
+			1-vec.z )
+
+#--------------------------------------------------------------
+
+func toOKlch(Vector3 vec):
+	var l = 0.4122214708f * vec.x + 0.5363325363f * vec.y + 0.0514459929f * vec.z
+	var m = 0.2119034982f * vec.x + 0.6806995451f * vec.y + 0.1073969566f * vec.z
+	var s = 0.0883024619f * vec.x + 0.2817188376f * vec.y + 0.6299787005f * vec.z
+
+	var l_ = cube_root(l)
+	var m_ = cube_root(m)
+	var s_ = cube_root(s)
+
+	var L = 0.2104542553f*l_ + 0.7936177850f*m_ - 0.0040720468f*s_
+	var A = 1.9779984951f*l_ - 2.4285922050f*m_ + 0.4505937099f*s_
+	var B = 0.0259040371f*l_ + 0.7827717662f*m_ - 0.8086757660f*s_
+	
+	var chroma = square_root((A*A) + (B*B))
+	var hue = atan2(B, A)
+
+	return Vector3(L, chroma, hue)
+
+#--------------------------------------------------------------
+
+func toRGB(Vector3 vec):
+	var A = vec.x * cos(vec.z)
+	var B = vec.x * sin(vec.z)
+
+	var l_ = vec.x + 0.3963377774f * A + 0.2158037573f * B;
+	var m_ = vec.x - 0.1055613458f * A - 0.0638541728f * B;
+	var s_ = vec.x - 0.0894841775f * A - 1.2914855480f * B;
+
+	var l = l_*l_*l_;
+	var m = m_*m_*m_;
+	var s = s_*s_*s_;
+
+	return Vector3( +4.0767416621f * l - 3.3077115913f * m + 0.2309699292f * s,
+			-1.2684380046f * l + 2.6097574011f * m - 0.3413193965f * s,
+			-0.0041960863f * l - 0.7034186147f * m + 1.7076147010f * s)
+
+#--------------------------------------------------------------
+
+#	check for colors being null
+
+character_color
+extra_color_1
+extra_color_2
+outline_color
+
+aura_settings
+	start_color
+	mid_color
+	end_color
+
+#	array type
+adv_aura
+	[i]
+		end_color
+		mid_color
+		start_color
+
+#	dict type
+adv_aura
+	end_color
+	mid_color
+	start_color
