@@ -12,8 +12,8 @@ The [steam workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id
 
 ## StyleSteal
 
-![stylestealthumbnail](https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/StyleSteal%20Mod%20Resources/yomistylestealthumbnail.png)
+![stylestealthumbnail](https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/StyleSteal%20Mod%20Resources/yomistylestealthumbnailv2.png)
 
 A mod for my personal use. It allows you to steal the style of your opponents and alter it a little bit, and also save the original for later use.
 
-Currently WIP.
+The [steam workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id=3588353610) for the mod.

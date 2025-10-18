@@ -14,11 +14,14 @@ func _on_network_character_selected(player_id, character, style = null):
 
 		#   switches selection text to indicate to the user that the mod is working
 		text_selectinglabel_original = $"%SelectingLabel".text
-		$"%SelectingLabel".text = "LOADED OPPONENT STYLE"
+		$"%SelectingLabel".text = "LOADED OPPONENT STYLE" + str(Custom.option_tint_red) + "|" + str(Custom.option_tint_green) + "|" + str(Custom.option_tint_blue)
 		$"%SelectingLabel".modulate = Color.green
-        
-		if Custom.option_save:
-			Custom.save_player_style(style, Network.players[player_id])
+		
+		var opponentNetworkID = -1
+		if Network.network_id == Network.network_ids[1]:
+			opponentNetworkID = Network.network_ids[2]
+		else:
+			opponentNetworkID = Network.network_ids[1]
 			
 		if Custom.option_copy:
 			retrieved_style = Custom.alter_style(style)
@@ -27,6 +30,16 @@ func _on_network_character_selected(player_id, character, style = null):
 				$"%P1Display"._on_style_selected(retrieved_style)
 			else:
 				$"%P2Display"._on_style_selected(retrieved_style)
+		
+		if Custom.option_save:
+			match int(Custom.option_save_type):
+				0:
+					Custom.save_player_style(style, Network.players[opponentNetworkID])
+				1:
+					Custom.save_player_style(retrieved_style, Network.players[opponentNetworkID]+"_Mod")
+				2:
+					Custom.save_player_style(style, Network.players[opponentNetworkID])
+					Custom.save_player_style(retrieved_style, Network.players[opponentNetworkID]+"_Mod")
 		
 	if Network.is_host() and player_id == Network.player_id:
 		$"%GameSettingsPanelContainer".hide()
@@ -55,4 +68,3 @@ func buffer_select(button):
 			Network.select_character(data, retrieved_style if current_player == 1 else retrieved_style)
 		else:
 			Network.select_character(data, $"%P1Display".selected_style if current_player == 1 else $"%P2Display".selected_style)
-

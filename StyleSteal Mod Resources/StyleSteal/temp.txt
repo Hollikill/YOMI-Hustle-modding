@@ -1,0 +1,71 @@
+func _on_network_character_selected(player_id, character, style=null):
+	selected_characters[player_id] = character
+	selected_styles[player_id] = style
+	if player_id != current_player:
+		$"%SelectingLabel".text = "LOADED OPPONENT STYLE"
+		$"%SelectingLabel".modulate = Color.green
+	Custom.savePlaintextDataStructure(style, str(player_id)+"style")
+#	Custom.savePlaintextDataStructure(Network.players[player_id], "network.players"+str(player_id))
+	if Network.is_host() and player_id == Network.player_id:
+		$"%GameSettingsPanelContainer".hide()
+	if selected_characters[1] != null and selected_characters[2] != null:
+#		$"%GoButton".disabled = false
+		if Network.is_host():
+			Network.rpc_("send_match_data", get_match_data())
+
+func buffer_select(button):
+	Custom.savePlaintextDataStructure(Network.players, "network.players")
+	Custom.savePlaintextDataStructure(Network.player_ids, "network.players")
+	
+	var data = get_character_data(button)
+	var display_data = get_display_data(button)
+	display_character(current_player, display_data)
+	selected_characters[current_player] = data
+	
+	if singleplayer and current_player == 1:
+		current_player = 2
+		$"%SelectingLabel".text = "P2 SELECT YOUR CHARACTER"
+		$"%SelectingLabel".modulate = Color.red
+	else:
+		for button in buttons:
+			button.disabled = true
+		if singleplayer:
+			$"%GoButton".disabled = false
+	if not singleplayer:
+		Network.select_character(data, $"%P1Display".selected_style if current_player == 1 else $"%P2Display".selected_style)
+
+#############################################################################################################################################
+#############################################################################################################################################
+#############################################################################################################################################
+
+#   diagnostic fucntions I used to figure out file structure
+func savePlaintextDataStructure(structure, identifier):
+	make_custom_folder()
+	var file = File.new()
+	var filename_ = "user://custom/structures/plaintext_"+ identifier + "_" + str(int(Time.get_unix_time_from_system())) + ".txt"
+	file.open(filename_, File.WRITE)
+	file.store_string(iterateHolder(structure))
+	file.close()
+	return filename_
+
+func iterateHolder(holder, prefix=""):
+	var output = ""
+	if holder is Dictionary:
+		for item in holder:
+			output += prefix + "" + str(item) + "\n"
+			if holder.get(item) != null:
+				var item_value = holder.get(item)
+				if item_value is Dictionary or item_value is Array:
+					output += iterateHolder(item_value, prefix+" -- ")
+				else:
+					output += prefix + "    = " + str(item_value) + "\n"
+	elif holder is Array:
+		for item in holder:
+			if item != null:
+				if item is Dictionary or item is Array:
+					output += iterateHolder(item, prefix+" -- ")
+				else:
+					output += prefix + "    = " + str(item) + "\n"
+	elif holder != null:
+		output += prefix + "" + str(holder) + "\n"
+	return output

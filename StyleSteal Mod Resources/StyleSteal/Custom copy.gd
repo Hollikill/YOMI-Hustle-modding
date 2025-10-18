@@ -2,17 +2,9 @@ extends "res://Custom.gd"
 
 var option_copy = true
 var option_save = true
-var option_save_type = 0
-
-var option_invert = false
-
-var option_grayscale = false
+var option_invert = true
+var option_grayscale = true
 var option_grayscale_factor = 5
-
-var option_tint = false
-var option_tint_red = 255
-var option_tint_green = 128
-var option_tint_blue = 0
 
 func save_player_style(style, player_name):
 	var style_save = style.duplicate(true)
@@ -38,7 +30,7 @@ func stylesteal_update_settings():
 		option_grayscale = option.get_setting("stylesteal","grayscale")
 		option_grayscale_factor = option.get_setting("stylesteal","grayscale_factor")
 
-		option_tint = option.get_setting("stylesteal","tint")
+		option_tint_color = option.get_setting("stylesteal","tint_color")
 		option_tint_red = option.get_setting("stylesteal","tint_red")
 		option_tint_green = option.get_setting("stylesteal","tint_green")
 		option_tint_blue = option.get_setting("stylesteal","tint_blue")
@@ -50,85 +42,85 @@ func alter_style(styleToCopy):
 
 #	base colors
 	if style.get("character_color") != null:
-		var color = alter_color(style.get("character_color"))
-		style["character_color"] = color
+		var vec3 = alter_color(style.get("character_color"))
+		style["character_color"][0] = vec3[0]
+		style["character_color"][1] = vec3[1]
+		style["character_color"][2] = vec3[2]
 	if style.get("extra_color_1") != null:
-		var color = alter_color(style.get("extra_color_1"))
-		style["extra_color_1"] = color
+		var vec3 = alter_color(style.get("extra_color_1"))
+		style["extra_color_1"][0] = vec3[0]
+		style["extra_color_1"][1] = vec3[1]
+		style["extra_color_1"][2] = vec3[2]
 	if style.get("extra_color_2") != null:
-		var color = alter_color(style.get("extra_color_2"))
-		style["extra_color_2"] = color
+		var vec3 = alter_color(style.get("extra_color_2"))
+		style["extra_color_2"][0] = vec3[0]
+		style["extra_color_2"][1] = vec3[1]
+		style["extra_color_2"][2] = vec3[2]
 	if style.get("outline_color") != null:
-		var color = alter_color(style.get("outline_color"))
-		style["outline_color"] = color
+		var vec3 = alter_color(style.get("outline_color"))
+		style["outline_color"][0] = vec3[0]
+		style["outline_color"][1] = vec3[1]
+		style["outline_color"][2] = vec3[2]
 
 #	Legacy ADV+ check
 	if style.get("aura_settings") is Array:
 		for aura in style.get("aura_settings"):
 			alter_style_aura(aura)
 #	vanilla aura
-	elif style.get("aura_settings") != null:
+	else:
+		if style.get("aura_settings") != null:
 			alter_style_aura(style.get("aura_settings"))
 
 #	ADV+ revamp auras
 	if style.get("adv_aura") is Array:
 		for aura in style.get("adv_aura"):
 			alter_style_aura(aura)
-	elif style.get("adv_aura") != null:
-		alter_style_aura(style.get("adv_aura"))
+	else:
+		if style.get("adv_aura") != null:
+			alter_style_aura(style.get("adv_aura"))
 	
 	return style
 
 func alter_style_aura(aura):
 	if aura.get("end_color") != null:
-		var color = alter_color(aura.get("end_color"))
-		aura["end_color"] = color
+		var vec3 = alter_color(aura.get("end_color"))
+		aura["end_color"][0] = vec3[0]
+		aura["end_color"][1] = vec3[1]
+		aura["end_color"][2] = vec3[2]
 	if aura.get("mid_color") != null:
-		var color = alter_color(aura.get("mid_color"))
-		aura["mid_color"] = color
+		var vec3 = alter_color(aura.get("mid_color"))
+		aura["mid_color"][0] = vec3[0]
+		aura["mid_color"][1] = vec3[1]
+		aura["mid_color"][2] = vec3[2]
 	if aura.get("start_color") != null:
-		var color = alter_color(aura.get("start_color"))
-		aura["start_color"] = color
+		var vec3 = alter_color(aura.get("start_color"))
+		aura["start_color"][0] = vec3[0]
+		aura["start_color"][1] = vec3[1]
+		aura["start_color"][2] = vec3[2]
 
 func alter_color(baseColor):
-	var color = Color(baseColor[0], baseColor[1], baseColor[2])
+	var color = Vector3(baseColor[0], baseColor[1], baseColor[2])
 	if option_invert:
-		color = color.inverted()
+		color = invertRGB(color)
 	if option_grayscale:
 		var oklchColor = toOklch(toOklab(color))
 		# reduce chroma by an order of magnitude
-		oklchColor.y = oklchColor.y / option_grayscale_factor
+		oklchColor.y = oklchColor.y/ option_grayscale_factor
 		color = toRGB(toOklab_back(oklchColor))
 	if option_tint:
-		var tint_color = Color(option_tint_red/255, option_tint_green/255, option_tint_blue/255)
-		color = tintColor(color, tint_color, 1)
-	return Color(color.r, color.g, color.b, baseColor.a)
+		color.x = clamp(color.x*0.5, 0, 1)
+		color.y = clamp(color.y*0.5, 0, 1)
+		color.z = clamp(color.z*0.5, 0, 1)
+		var colorTint = Color(option_tint_red/255, option_tint_green/255, option_tint_blue/255, 1)
+	return color
 
-func tintColor(color, tint_color, tint_factor):
-	var oklchColor = toOklch(toOklab(color))
-	oklchColor.y = 0
-	var color_grayed = toRGB(toOklab_back(oklchColor))
+func invertRGB(vec):
+	return Vector3( 1-vec.x, 1-vec.y, 1-vec.z)
 
-	var oklabColor = toOklab(color)
-
-	var tint_oklabColor = toOklab(tint_color)
-	tint_oklabColor.x = oklabColor.x
-	var tint_color_adjusted = toRGB(tint_oklabColor)
-
-	var color_adjusted = Color(color_grayed.r*(1-tint_factor), color_grayed.g*(1-tint_factor), color_grayed.b*(1-tint_factor))
-	tint_color_adjusted = Color(tint_color_adjusted.r*tint_factor, tint_color_adjusted.g*tint_factor, tint_color_adjusted.b*tint_factor)
-#	var tint_color_adjusted = Color(tint_color.r*tint_factor, tint_color.g*tint_factor, tint_color.g*tint_factor)
-	
-	return Color(color_adjusted.r + tint_color_adjusted.r, color_adjusted.g + tint_color_adjusted.g, color_adjusted.b + tint_color_adjusted.b)
-	
-
-#func invertRGB(color):
-#	return Color( 1-color.r, 1-color.g, 1-color.b)
-
-func toOklab(color):
-	var l = 0.4122214708 * color.r + 0.5363325363 * color.g + 0.0514459929 * color.b
-	var m = 0.2119034982 * color.r + 0.6806995451 * color.g + 0.1073969566 * color.b
-	var s = 0.0883024619 * color.r + 0.2817188376 * color.g + 0.6299787005 * color.b
+func toOklab(vec):
+	var l = 0.4122214708 * vec.x + 0.5363325363 * vec.y + 0.0514459929 * vec.z
+	var m = 0.2119034982 * vec.x + 0.6806995451 * vec.y + 0.1073969566 * vec.z
+	var s = 0.0883024619 * vec.x + 0.2817188376 * vec.y + 0.6299787005 * vec.z
 
 	var l_ = pow(l, 1.0/3.0)
 	var m_ = pow(m, 1.0/3.0)
@@ -140,31 +132,31 @@ func toOklab(color):
 	
 	return Vector3(L, A, B)
 
-func toOklch(color):
-	var chroma = sqrt((color.y*color.y) + (color.z*color.z))
-	var hue = atan2(color.z, color.y)
+func toOklch(vec):
+	var chroma = sqrt((vec.y*vec.y) + (vec.z*vec.z))
+	var hue = atan2(vec.z, vec.y)
 	
-	return Vector3(color.x, chroma, hue)
+	return Vector3(vec.x, chroma, hue)
 
-func toOklab_back(color):
-	var a = color.y * cos(color.z)
-	var b = color.y * sin(color.z)
+func toOklab_back(vec):
+	var a = vec.y * cos(vec.z)
+	var b = vec.y * sin(vec.z)
 	
-	return Vector3(color.x, a, b)
+	return Vector3(vec.x, a, b)
 
-func toRGB(color):
-	var A = color.y
-	var B = color.z
+func toRGB(vec):
+	var A = vec.y
+	var B = vec.z
 
-	var l_ = color.x + 0.3963377774 * A + 0.2158037573 * B;
-	var m_ = color.x - 0.1055613458 * A - 0.0638541728 * B;
-	var s_ = color.x - 0.0894841775 * A - 1.2914855480 * B;
+	var l_ = vec.x + 0.3963377774 * A + 0.2158037573 * B;
+	var m_ = vec.x - 0.1055613458 * A - 0.0638541728 * B;
+	var s_ = vec.x - 0.0894841775 * A - 1.2914855480 * B;
 
 	var l = l_*l_*l_;
 	var m = m_*m_*m_;
 	var s = s_*s_*s_;
 
-	return Color( +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s)
+	return Vector3( +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s)
 
 
 ##   diagnostic fucntions I used to figure out file structure
