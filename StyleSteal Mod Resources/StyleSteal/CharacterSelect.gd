@@ -14,7 +14,7 @@ func _on_network_character_selected(player_id, character, style = null):
 
 		#   switches selection text to indicate to the user that the mod is working
 		text_selectinglabel_original = $"%SelectingLabel".text
-		$"%SelectingLabel".text = "LOADED OPPONENT STYLE" + str(Custom.option_tint_red) + "|" + str(Custom.option_tint_green) + "|" + str(Custom.option_tint_blue)
+		$"%SelectingLabel".text = "LOADED OPPONENT STYLE"
 		$"%SelectingLabel".modulate = Color.green
 		
 		var opponentNetworkID = -1
