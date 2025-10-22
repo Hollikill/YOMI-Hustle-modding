@@ -13,37 +13,6 @@ var option_tint_red = 255
 var option_tint_green = 128
 var option_tint_blue = 0
 
-func add_style_author(style, player_name):
-	# create the new author tag
-	var author: Dictionary
-	if Network.steam:
-		author["steam"] = true
-		for member in SteamLobby.LOBBY_MEMBERS:
-			if member.steam_id != SteamHustle.STEAM_ID:
-				author["steam_id"] = member.steam_id
-	else:
-		author["steam"] = false
-	author["display_name"] = player_name
-	author["earlist_time_seen"] = Time.get_unix_time_from_system()
-
-	# check the new author tag doesn't match a previous one
-	var matches_previous_author = false
-	if style.get("authors") is Array:
-		for author_credit in style.get("authors"):
-			if author_credit.get("steam") and author.get("steam"):
-				if author_credit.get("steam_id") == author.get("steam_id"):
-					matches_previous_author = true
-			if not author.get("steam"):
-				if author_credit.get("display_name") == author.get("display_name"):
-					matches_previous_author = true
-	
-	# check if authors array exists
-	var authors: Array
-	if not matches_previous_author:
-		authors.append(author)
-	if style.get("authors") == null:
-		style["authors"] = authors
-
 # load mod menu options
 func stylemodifiers_update_settings():
 #	print("updated settings")
