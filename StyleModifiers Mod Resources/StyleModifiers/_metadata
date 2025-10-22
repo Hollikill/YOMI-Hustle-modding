@@ -1,0 +1,13 @@
+{
+  "name": "stylemodifiers",
+  "friendly_name": "Style Modifiers",
+  "description": "Copy  and modify your opponent's or your own styles during a match!",
+  "author": "Hollikill (https://hollikill.net)",
+  "version": "1.4",
+  "link": "",
+  "id": "3588353610",
+  "requires": [""],
+  "overwrites": false,
+  "client_side": true,
+  "priority": -1011
+}

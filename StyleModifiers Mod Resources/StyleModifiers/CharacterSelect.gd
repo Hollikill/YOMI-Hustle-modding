@@ -8,11 +8,11 @@ func _on_network_character_selected(player_id, character, style = null):
 	selected_styles[player_id] = style
 	var text_selectinglabel_original = null
 
+	#	get settings
+	Custom.stylemodifiers_update_settings()
+
 	#   grabs and converts opponents style
 	if player_id != current_player:
-		#	get settings
-		Custom.stylesteal_update_settings()
-
 		#   switches selection text to indicate to the user that the mod is working
 		text_selectinglabel_original = $"%SelectingLabel".text
 		$"%SelectingLabel".text = "LOADED OPPONENT STYLE"
@@ -44,10 +44,10 @@ func buffer_select(button):
 	var display_data = get_display_data(button)
 	display_character(current_player, display_data)
 	selected_characters[current_player] = data
-
-	#	get settings
-	Custom.stylesteal_update_settings()
 	
+	#	get settings
+	Custom.stylemodifiers_update_settings()
+
 	if singleplayer and current_player == 1:
 		current_player = 2
 		$"%SelectingLabel".text = "P2 SELECT YOUR CHARACTER"
@@ -58,8 +58,9 @@ func buffer_select(button):
 		if singleplayer:
 			$"%GoButton".disabled = false
 	if not singleplayer:
-		var style_grabbed = $"%P1Display".selected_style if current_player == 1 else $"%P2Display".selected_style		
-		if retrieved_style != null:
+		var style_grabbed = $"%P1Display".selected_style if current_player == 1 else $"%P2Display".selected_style
+		var style_grabbed_opp = selected_styles[1] if current_player == 1 else selected_styles[2]	
+		if retrieved_style != null and Custom.option_copy and style_grabbed_opp != null:
 			Network.select_character(data, retrieved_style)
 		elif Custom.option_modify_self and style_grabbed != null:
 			retrieved_style = Custom.alter_style(style_grabbed)

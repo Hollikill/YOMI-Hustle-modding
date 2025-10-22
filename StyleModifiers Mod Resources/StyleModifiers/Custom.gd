@@ -45,21 +45,21 @@ func add_style_author(style, player_name):
 		style["authors"] = authors
 
 # load mod menu options
-func stylesteal_update_settings():
+func stylemodifiers_update_settings():
 #	print("updated settings")
 	var option = get_tree().get_root().get_node_or_null("Main/ModOptions")
 	if option != null:
-		option_copy = option.get_setting("stylesteal","copy")
-		option_copy = option.get_setting("stylesteal","modify_self")
+		option_copy = option.get_setting("stylemodifiers","copy")
+		option_copy = option.get_setting("stylemodifiers","modify_self")
 
-		option_invert = option.get_setting("stylesteal","invert")
-		option_grayscale = option.get_setting("stylesteal","grayscale")
-		option_grayscale_factor = option.get_setting("stylesteal","grayscale_factor")
+		option_invert = option.get_setting("stylemodifiers","invert")
+		option_grayscale = option.get_setting("stylemodifiers","grayscale")
+		option_grayscale_factor = option.get_setting("stylemodifiers","grayscale_factor")
 
-		option_tint = option.get_setting("stylesteal","tint")
-		option_tint_red = option.get_setting("stylesteal","tint_red")
-		option_tint_green = option.get_setting("stylesteal","tint_green")
-		option_tint_blue = option.get_setting("stylesteal","tint_blue")
+		option_tint = option.get_setting("stylemodifiers","tint")
+		option_tint_red = option.get_setting("stylemodifiers","tint_red")
+		option_tint_green = option.get_setting("stylemodifiers","tint_green")
+		option_tint_blue = option.get_setting("stylemodifiers","tint_blue")
 
 #	Below are custom functions to deal with color changing
 #   ughhh.... i realized I could just use Color() but it's too late now. fix if i come back to this

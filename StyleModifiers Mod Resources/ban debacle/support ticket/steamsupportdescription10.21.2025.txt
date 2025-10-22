@@ -1,0 +1,21 @@
+My steam workshop item was taken down for what was most certainly NOT a violation of steam community guidelines. I suspect this was because of false reporting of my item.
+
+However, after conferring with the modding community of the game, I have determined which parts of the mod were unacceptable, and have removed them. However, I am an unable to alter the workshop item to upload the corrected version.
+
+I am asking support to un-remove the item but put it in a hidden state, so that I can upload the fixed version.
+
+---
+
+Situation info:
+
+Game: Your Only Move Is Hustle
+
+Workshop Item in question: https://steamcommunity.com/sharedfiles/filedetails/?id=3588353610
+
+Problem with the item: It allowed saving of other's styles (a choice of colors that people could pick) when meeting them in an online match. This was intended to be used for constructive purposes, but some people accused the mod of enabling content theft.
+
+Solution: I have removed the option for the mod to save styles in any way, shape, or form.
+
+Images: I have attached images of before (update 1.1) and after (update 1.2) versions of mod for proof of removal of the option. Additionally, I have attached an image of some comments proving existence of the saving complaint.
+
+{menuupdate1.1.png, menuupdate1.2.png, comments.png}
