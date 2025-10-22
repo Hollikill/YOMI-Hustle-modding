@@ -1,9 +1,9 @@
 {
   "name": "stylesteal",
   "friendly_name": "Style Steal",
-  "description": "Steal your opponent's styles, and save them for later!\n\nAlso has options for modifying the copied style.",
+  "description": "Copy your opponent's styles during a match!\n\nAlso has options for modifying the copied style.",
   "author": "Hollikill (https://hollikill.net)",
-  "version": "1.1",
+  "version": "1.2",
   "link": "",
   "id": "3588353610",
   "requires": [""],

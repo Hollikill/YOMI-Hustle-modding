@@ -1,7 +1,7 @@
 extends "res://Custom.gd"
 
 var option_copy = true
-var option_save = true
+var option_save = false
 var option_save_type = 0
 
 var option_invert = false
