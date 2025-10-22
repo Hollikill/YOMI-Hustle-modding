@@ -172,6 +172,8 @@ sf::Image displayAlteredColors(int fidelity, int pixelSize, colorm::Rgb tint_col
 }*/
 
 void tintColor(colorm::Rgb& inputColor, colorm::Rgb tintColor, double tintFactor) {
+    double lightnessAdjustment = (1 - colorm::Oklab(tintColor).lightness())/2;
+
     colorm::Oklch colorHueShifted = colorm::Oklch(inputColor);
 
     colorHueShifted.setHue(colorm::Oklch(tintColor).hue());
@@ -180,13 +182,21 @@ void tintColor(colorm::Rgb& inputColor, colorm::Rgb tintColor, double tintFactor
     colorm::Oklab oklabTint = colorm::Oklab(colorHueShifted);
     colorm::Oklab oklabBase = colorm::Oklab(inputColor);
 
+    double baseColorLightnessCorrected = std::max(0.0, (colorm::Oklab(inputColor).lightness() - 0.25));
+    double darkBaseColorCorrection = std::min(1.0, std::max(0.0, (0.5 + log(baseColorLightnessCorrected))));
+    lightnessAdjustment = lightnessAdjustment * darkBaseColorCorrection;
+
     colorm::Oklab midpoint = colorm::Oklab(
-        oklabTint.lightness(),
+        ((baseColorLightnessCorrected * (1 - lightnessAdjustment)) + (colorm::Oklab(tintColor).lightness() * lightnessAdjustment)),
         (oklabBase.a() * (1 - tintFactor)) + (oklabTint.a() * tintFactor),
         (oklabBase.b() * (1 - tintFactor)) + (oklabTint.b() * tintFactor)
     );
+    midpoint = colorm::Oklab(colorm::Hsl(midpoint).setSaturation(colorm::Hsl(midpoint).saturation() * std::min(1.0, pow(1 + baseColorLightnessCorrected, 2) - 1)));
+    //((oklabTint.lightness() * (1-lightnessAdjustment)) + (colorm::Oklab(tintColor).lightness() * lightnessAdjustment)),
 
     inputColor = colorm::Rgb(midpoint);
+    
+    //inputColor = colorm::Rgb((int)(darkBaseColorCorrection*255), (int)(darkBaseColorCorrection * 255), (int)(darkBaseColorCorrection * 255));
 }
 
 void grayscaleColor(colorm::Rgb& inputColor) {
