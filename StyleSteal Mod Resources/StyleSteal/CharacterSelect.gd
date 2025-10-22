@@ -7,6 +7,7 @@ func _on_network_character_selected(player_id, character, style = null):
 	selected_characters[player_id] = character
 	selected_styles[player_id] = style
 	var text_selectinglabel_original = null
+
 	#   grabs and converts opponents style
 	if player_id != current_player:
 		#	get settings
@@ -23,23 +24,23 @@ func _on_network_character_selected(player_id, character, style = null):
 		else:
 			opponentNetworkID = Network.network_ids[1]
 			
-		if Custom.option_copy:
+		if Custom.option_copy && selected_styles[current_player] == null:
 			retrieved_style = Custom.alter_style(style)
 			selected_styles[current_player] = retrieved_style
-			if player_id == 1:
+			if current_player == 1:
 				$"%P1Display"._on_style_selected(retrieved_style)
 			else:
 				$"%P2Display"._on_style_selected(retrieved_style)
 		
-		if Custom.option_save:
-			match int(Custom.option_save_type):
-				0:
-					Custom.save_player_style(style, Network.players[opponentNetworkID])
-				1:
-					Custom.save_player_style(retrieved_style, Network.players[opponentNetworkID]+"_Mod")
-				2:
-					Custom.save_player_style(style, Network.players[opponentNetworkID])
-					Custom.save_player_style(retrieved_style, Network.players[opponentNetworkID]+"_Mod")
+#		if Custom.option_save:
+#			match int(Custom.option_save_type):
+#				0:
+#					Custom.save_player_style(style, Network.players[opponentNetworkID])
+#				1:
+#					Custom.save_player_style(retrieved_style, Network.players[opponentNetworkID]+"_Mod")
+#				2:
+#					Custom.save_player_style(style, Network.players[opponentNetworkID])
+#					Custom.save_player_style(retrieved_style, Network.players[opponentNetworkID]+"_Mod")
 		
 	if Network.is_host() and player_id == Network.player_id:
 		$"%GameSettingsPanelContainer".hide()
@@ -53,6 +54,9 @@ func buffer_select(button):
 	var display_data = get_display_data(button)
 	display_character(current_player, display_data)
 	selected_characters[current_player] = data
+
+	#	get settings
+	Custom.stylesteal_update_settings()
 	
 	if singleplayer and current_player == 1:
 		current_player = 2
@@ -64,7 +68,16 @@ func buffer_select(button):
 		if singleplayer:
 			$"%GoButton".disabled = false
 	if not singleplayer:
+		var style_grabbed = $"%P1Display".selected_style if current_player == 1 else $"%P2Display".selected_style		
 		if retrieved_style != null:
-			Network.select_character(data, retrieved_style if current_player == 1 else retrieved_style)
+			Network.select_character(data, retrieved_style)
+		elif Custom.option_modify_self and style_grabbed != null:
+			retrieved_style = Custom.alter_style(style_grabbed)
+			selected_styles[current_player] = retrieved_style
+			if current_player == 1:
+				$"%P1Display"._on_style_selected(retrieved_style)
+			else:
+				$"%P2Display"._on_style_selected(retrieved_style)
+			Network.select_character(data, retrieved_style)
 		else:
 			Network.select_character(data, $"%P1Display".selected_style if current_player == 1 else $"%P2Display".selected_style)

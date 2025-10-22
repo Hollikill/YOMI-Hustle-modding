@@ -5,6 +5,7 @@ func _ready():
 	var menu = generate_menu("stylesteal", "StyleSteal")
 
 	menu.add_bool("copy", "Copy opponent's style", true)
+	menu.add_bool("modify_self", "Modify your own style", true)
 
 #	menu.add_bool("save", "Save style after copying", true)
 

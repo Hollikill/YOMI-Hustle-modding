@@ -1,6 +1,8 @@
 extends "res://Custom.gd"
 
 var option_copy = true
+var option_modify_self = true
+
 var option_save = false
 var option_save_type = 0
 
@@ -63,8 +65,10 @@ func stylesteal_update_settings():
 	var option = get_tree().get_root().get_node_or_null("Main/ModOptions")
 	if option != null:
 		option_copy = option.get_setting("stylesteal","copy")
-		option_save = option.get_setting("stylesteal","save")
-		option_save_type = option.get_setting("stylesteal","save_type")
+		option_copy = option.get_setting("stylesteal","modify_self")
+
+#		option_save = option.get_setting("stylesteal","save")
+#		option_save_type = option.get_setting("stylesteal","save_type")
 
 		option_invert = option.get_setting("stylesteal","invert")
 		option_grayscale = option.get_setting("stylesteal","grayscale")
