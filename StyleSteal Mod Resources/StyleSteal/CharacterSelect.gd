@@ -32,16 +32,6 @@ func _on_network_character_selected(player_id, character, style = null):
 			else:
 				$"%P2Display"._on_style_selected(retrieved_style)
 		
-#		if Custom.option_save:
-#			match int(Custom.option_save_type):
-#				0:
-#					Custom.save_player_style(style, Network.players[opponentNetworkID])
-#				1:
-#					Custom.save_player_style(retrieved_style, Network.players[opponentNetworkID]+"_Mod")
-#				2:
-#					Custom.save_player_style(style, Network.players[opponentNetworkID])
-#					Custom.save_player_style(retrieved_style, Network.players[opponentNetworkID]+"_Mod")
-		
 	if Network.is_host() and player_id == Network.player_id:
 		$"%GameSettingsPanelContainer".hide()
 	if selected_characters[1] != null and selected_characters[2] != null:

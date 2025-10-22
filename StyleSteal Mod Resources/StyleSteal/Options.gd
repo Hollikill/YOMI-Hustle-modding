@@ -7,13 +7,6 @@ func _ready():
 	menu.add_bool("copy", "Copy opponent's style", true)
 	menu.add_bool("modify_self", "Modify your own style", true)
 
-#	menu.add_bool("save", "Save style after copying", true)
-
-#	var save_type_dropdown = menu.add_dropdown_menu("save_type", "Which styles to save?")
-#	save_type_dropdown.add_item("Save unmodified style")
-#	save_type_dropdown.add_item("Save modified style")
-#	save_type_dropdown.add_item("Save both styles")
-
 	menu.add_label("--spacer", "")
 
 	menu.add_label("label1", "Modifiers Applied to Copied Style During Match")

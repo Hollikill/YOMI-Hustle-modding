@@ -3,9 +3,6 @@ extends "res://Custom.gd"
 var option_copy = true
 var option_modify_self = true
 
-var option_save = false
-var option_save_type = 0
-
 var option_invert = false
 
 var option_grayscale = false
@@ -15,18 +12,6 @@ var option_tint = false
 var option_tint_red = 255
 var option_tint_green = 128
 var option_tint_blue = 0
-
-func save_player_style(style, player_name):
-	var style_save = style.duplicate(true)
-	if style_save.get("style_name") != null:
-		style_save["style_name"] = str(player_name) + "_" + style_save.get("style_name")
-	make_custom_folder()
-	var file = File.new()
-	var filename_ = "user://custom/" + str(player_name) + "_" + style.style_name + ".style"
-	file.open(filename_, File.WRITE)
-	file.store_var(style_save, true)
-	file.close()
-	return filename_
 
 func add_style_author(style, player_name):
 	# create the new author tag
@@ -66,9 +51,6 @@ func stylesteal_update_settings():
 	if option != null:
 		option_copy = option.get_setting("stylesteal","copy")
 		option_copy = option.get_setting("stylesteal","modify_self")
-
-#		option_save = option.get_setting("stylesteal","save")
-#		option_save_type = option.get_setting("stylesteal","save_type")
 
 		option_invert = option.get_setting("stylesteal","invert")
 		option_grayscale = option.get_setting("stylesteal","grayscale")
