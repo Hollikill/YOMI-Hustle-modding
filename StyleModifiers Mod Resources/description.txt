@@ -1,0 +1,9 @@
+Copy  and modify your opponent's or your own styles during a match!
+
+The invert option will invert the colors of the style during the match.
+The greyscale option will reduce the saturation of your copied style during the match, for extra cool-factor.
+The grayscale slider controls how much saturation to remove. IE: 1 is 100% saturation, 2 is 50% saturation, 3 is 33%, etc.
+The tint option will tint all the colors of the style in the selected color during the match.
+
+[i] For people realize this is a fork of the StyleSteal mod: [/i]
+[i] This version contains no saving features at all, and was approved by workshop moderators before I uploaded it. [/i]

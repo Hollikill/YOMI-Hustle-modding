@@ -1,7 +1,9 @@
+#include <iostream>
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
 #include <chrono>
+#include <thread>
 
 #include <SFML/Graphics.hpp>
 #include "imgui.h"
@@ -10,8 +12,10 @@
 #include "../external/colorm.h"
 
 sf::Image displayDebugColors(int, int);
-sf::Image displayAlteredColors(int inFidelity, int pixel_size, colorm::Rgb tint_color, double tintFactor);
-void tintColor(colorm::Rgb&, colorm::Rgb, double);
+sf::Image displayAlteredColors(int, int, colorm::Rgb);
+sf::Image displayAlteredColors2(int, int, colorm::Rgb);
+void tintColor2(colorm::Rgb&, colorm::Rgb, double);
+void tintColor(colorm::Rgb&, colorm::Rgb);
 void grayscaleColor(colorm::Rgb&);
 void grayscaleColor(colorm::Rgb&, int);
 
@@ -23,6 +27,16 @@ sf::Color sfColor(colorm::Rgb color) {
 }
 
 int main() {
+    std::cout << colorm::Oklab(colorm::Rgb(0, 0, 0)).lightness() << "\n";
+    std::cout << colorm::Oklab(colorm::Rgb(1, 0, 0)).lightness() << "\n";
+    std::cout << colorm::Oklab(colorm::Rgb(1, 1, 0)).lightness() << "\n";
+    std::cout << colorm::Oklab(colorm::Rgb(1, 1, 1)).lightness() << "\n";
+    std::cout << colorm::Oklab(colorm::Rgb(0, 1, 0)).lightness() << "\n";
+    std::cout << colorm::Oklab(colorm::Rgb(0, 0, 1)).lightness() << "\n";
+    //std::cout << colorm::Oklab(colorm::Rgb(0,0,255)).setLightness().lightness();
+
+    //////////////////////////////
+
     sf::RenderWindow window;
     window.create(sf::VideoMode({ 1920, 1080 }), "Color Tests", sf::State::Windowed);
     window.setFramerateLimit(60);
@@ -49,27 +63,46 @@ int main() {
 
     sf::Image alteredImage({100,100}, sf::Color::Magenta);
 
+    bool keyPressedR = false;
+    bool keyPressedT = false;
+
+    sf::Texture debugTexture(displayDebugColors(10, 90));
+    sf::Sprite debugSprite(debugTexture);
+
     while (window.isOpen())
     {
-        if (lastFrame + frameDelay < std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())) {
-            while (const std::optional event = window.pollEvent())
+        while (const std::optional event = window.pollEvent())
+        {
+            ImGui::SFML::ProcessEvent(window, event.value());
+            if (event->is<sf::Event::Closed>())
             {
-                ImGui::SFML::ProcessEvent(window, event.value());
-                if (event->is<sf::Event::Closed>())
-                {
-                    window.close();
+                window.close();
+            }
+            else if (event->is<sf::Event::Resized>())
+            {
+                sf::FloatRect view({ 0, 0 }, { (float)window.getSize().x, (float)window.getSize().y });
+                window.setView(sf::View(view));
+            }
+            else if (event->is<sf::Event::KeyPressed>()) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
+                    // reload altered color set on key 'r' pressed
+                    keyPressedR = true;
+                    keyPressedT = false;
                 }
-                else if (event->is<sf::Event::Resized>())
-                {
-                    sf::FloatRect view({ 0, 0 }, { (float)window.getSize().x, (float)window.getSize().y });
-                    window.setView(sf::View(view));
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
+                    keyPressedT = true;
+                    keyPressedR = false;
                 }
-                else if (event->is<sf::Event::KeyPressed>()) {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
-                        // reload altered color set on key 'r' pressed
-                        alteredImage = displayAlteredColors(10, 90, colorm::Rgb(rval, gval, bval), (double)tintFactor);
-                    }
-                }
+            }
+        }
+        if (lastFrame + frameDelay < std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())) {
+            if (keyPressedR) {
+                alteredImage = displayAlteredColors(10, 90, colorm::Rgb(rval, gval, bval));
+                keyPressedR = false;
+            }
+            if (keyPressedT) {
+                alteredImage = displayAlteredColors2(10, 90, colorm::Rgb(rval, gval, bval));
+                keyPressedT = false;
             }
 
             ImGui::SFML::Update(window, deltaClock.restart());
@@ -84,9 +117,7 @@ int main() {
 
             ImGui::SliderFloat("Tint Factor", &tintFactor, 0, 1);
 
-            sf::Texture texture(displayDebugColors(10, 90));
-            sf::Sprite sprite(texture);
-            window.draw(sprite);
+            window.draw(debugSprite);
 
             sf::Texture texture2(alteredImage);
             sf::Sprite sprite2(texture2);
@@ -134,7 +165,7 @@ sf::Image displayDebugColors(int fidelity, int pixelSize) {
     return canvas;
 }
 
-sf::Image displayAlteredColors(int fidelity, int pixelSize, colorm::Rgb tint_color, double tintFactor) {
+sf::Image displayAlteredColors(int fidelity, int pixelSize, colorm::Rgb tint_color) {
 
     sf::Image canvas(vec2u(fidelity * pixelSize, fidelity * pixelSize), sf::Color::Black);
 
@@ -146,7 +177,7 @@ sf::Image displayAlteredColors(int fidelity, int pixelSize, colorm::Rgb tint_col
 
             colorm::Rgb baseColor(x_val, y_val, y_val_granular);
 
-            tintColor(baseColor, tint_color, tintFactor);
+            tintColor(baseColor, tint_color);
 
             canvas.setPixel(vec2u(x,y), sfColor(baseColor));
         }
@@ -155,10 +186,32 @@ sf::Image displayAlteredColors(int fidelity, int pixelSize, colorm::Rgb tint_col
     return canvas;
 }
 
-/*void tintColor(colorm::Rgb& inputColor, colorm::Rgb tintColor, double tintFactor) {
+sf::Image displayAlteredColors2(int fidelity, int pixelSize, colorm::Rgb tint_color) {
+
+    sf::Image canvas(vec2u(fidelity * pixelSize, fidelity * pixelSize), sf::Color::Black);
+
+    for (int y = 0; y < fidelity * pixelSize; y++) {
+        for (int x = 0; x < fidelity * pixelSize; x++) {
+            float x_val = (x / pixelSize) * 255 / fidelity;
+            float y_val = (y / pixelSize) * 255 / fidelity;
+            float y_val_granular = (y % pixelSize) * (255 / pixelSize);
+
+            colorm::Rgb baseColor(x_val, y_val, y_val_granular);
+
+            tintColor2(baseColor, tint_color, 1.0);
+
+            canvas.setPixel(vec2u(x, y), sfColor(baseColor));
+        }
+    }
+
+    return canvas;
+}
+
+void tintColor2(colorm::Rgb& inputColor, colorm::Rgb tintColor, double tintFactor) {
     grayscaleColor(inputColor);
 
     double brightness = colorm::Oklab(inputColor).lightness();
+    brightness = std::max(0.0, (1.1 * brightness) - 0.1);
 
     tintColor = colorm::Rgb(colorm::Oklab(tintColor).setLightness(brightness));
 
@@ -169,9 +222,9 @@ sf::Image displayAlteredColors(int fidelity, int pixelSize, colorm::Rgb tint_col
     };
 
     inputColor = colorm::Rgb(colors[0], colors[1], colors[2]);
-}*/
+}
 
-void tintColor(colorm::Rgb& inputColor, colorm::Rgb tintColor, double tintFactor) {
+void tintColor(colorm::Rgb& inputColor, colorm::Rgb tintColor) {
     double lightnessAdjustment = (1 - colorm::Oklab(tintColor).lightness())/2;
 
     colorm::Oklch colorHueShifted = colorm::Oklch(inputColor);
@@ -180,18 +233,23 @@ void tintColor(colorm::Rgb& inputColor, colorm::Rgb tintColor, double tintFactor
     colorHueShifted.setChroma(colorm::Oklch(tintColor).chroma());
 
     colorm::Oklab oklabTint = colorm::Oklab(colorHueShifted);
-    colorm::Oklab oklabBase = colorm::Oklab(inputColor);
 
     double baseColorLightnessCorrected = std::max(0.0, (colorm::Oklab(inputColor).lightness() - 0.25));
-    double darkBaseColorCorrection = std::min(1.0, std::max(0.0, (0.5 + log(baseColorLightnessCorrected))));
-    lightnessAdjustment = lightnessAdjustment * darkBaseColorCorrection;
+    lightnessAdjustment = lightnessAdjustment * std::min(1.0, std::max(0.0, (0.5 + log(baseColorLightnessCorrected))));
 
-    colorm::Oklab midpoint = colorm::Oklab(
+    /*colorm::Oklab midpoint = colorm::Oklab(
         ((baseColorLightnessCorrected * (1 - lightnessAdjustment)) + (colorm::Oklab(tintColor).lightness() * lightnessAdjustment)),
-        (oklabBase.a() * (1 - tintFactor)) + (oklabTint.a() * tintFactor),
-        (oklabBase.b() * (1 - tintFactor)) + (oklabTint.b() * tintFactor)
+        oklabTint.a(),
+        oklabTint.b()
+    );*/
+    colorm::Oklab midpoint = colorm::Oklab(
+        baseColorLightnessCorrected,
+        oklabTint.a(),
+        oklabTint.b()
     );
-    midpoint = colorm::Oklab(colorm::Hsl(midpoint).setSaturation(colorm::Hsl(midpoint).saturation() * std::min(1.0, pow(1 + baseColorLightnessCorrected, 2) - 1)));
+    midpoint = colorm::Oklab(colorm::Hsl(midpoint).setSaturation(
+            colorm::Hsl(midpoint).saturation() * std::max(std::min(1.0, pow(1 + baseColorLightnessCorrected, 2) - 1), (colorm::Hsl(midpoint).saturation()/2)-0.1)
+    ));
     //((oklabTint.lightness() * (1-lightnessAdjustment)) + (colorm::Oklab(tintColor).lightness() * lightnessAdjustment)),
 
     inputColor = colorm::Rgb(midpoint);

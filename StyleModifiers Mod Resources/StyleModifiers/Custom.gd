@@ -99,7 +99,7 @@ func tintColor(color, tint_color, tint_factor):
 	var oklabColor = toOklab(color)
 
 	var tint_oklabColor = toOklab(tint_color)
-	tint_oklabColor.x = oklabColor.x
+	tint_oklabColor.x = max(0, (1.1 * oklabColor.x) - 0.1)
 	var tint_color_adjusted = toRGB(tint_oklabColor)
 
 	var color_adjusted = Color(color_grayed.r*(1-tint_factor), color_grayed.g*(1-tint_factor), color_grayed.b*(1-tint_factor))
