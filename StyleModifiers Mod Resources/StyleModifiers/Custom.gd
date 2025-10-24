@@ -19,7 +19,7 @@ func stylemodifiers_update_settings():
 	var option = get_tree().get_root().get_node_or_null("Main/ModOptions")
 	if option != null:
 		option_copy = option.get_setting("stylemodifiers","copy")
-		option_copy = option.get_setting("stylemodifiers","modify_self")
+		option_modify_self = option.get_setting("stylemodifiers","modify_self")
 
 		option_invert = option.get_setting("stylemodifiers","invert")
 		option_grayscale = option.get_setting("stylemodifiers","grayscale")
