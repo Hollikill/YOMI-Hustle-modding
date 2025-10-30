@@ -12,7 +12,7 @@ The [steam workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id
 
 ## StyleModifiers
 
-![stylemodifiersthumbnail](https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/StyleModifiers%20Mod%20Resources/yomistylemodifiersthumbnailv2.png)
+![stylemodifiersthumbnail](https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/StyleModifiers%20Mod%20Resources/yomistylemodifierthumbnail.png)
 
 Allows you to copy an opponent's style during a match, and apply modifiers to your style or a copied style during a match.
 
