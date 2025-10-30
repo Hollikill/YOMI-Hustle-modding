@@ -16,4 +16,4 @@ The [steam workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id
 
 Allows you to copy an opponent's style during a match, and apply modifiers to your style or a copied style during a match.
 
-The [steam workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id=3588353610) for the mod.
+The [steam workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id=3591856808) for the mod.
