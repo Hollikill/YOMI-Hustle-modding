@@ -12,7 +12,8 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-include_directories(external/imgui/)
+include_directories(external/imgui/
+                    source/)
 
 file(GLOB IMGUI
     external/imgui/*.h
@@ -23,7 +24,8 @@ file(GLOB COLOR
 )
 file(GLOB SOURCE
     source/*.h
-    source/*.cpp)
+    source/*.cpp
+)
 
 add_executable(${PROJECT_NAME}
                 ${IMGUI}

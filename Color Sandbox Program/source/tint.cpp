@@ -1,29 +1,13 @@
-#include <cstdlib>
-#include <ctime>
-#include <algorithm>
-#include <chrono>
-#include <thread>
+#include "tint.h"
 
-#include <SFML/Graphics.hpp>
-#include "imgui.h"
-#include "imgui-SFML.h"
-
-#include "../external/colorm.h"
-
-sf::Image displayDebugColors(int, int);
-sf::Image displayAlteredColors(int, int, colorm::Rgb);
-sf::Image displayAlteredColors2(int, int, colorm::Rgb);
-void tintColor2(colorm::Rgb&, colorm::Rgb, double);
-void tintColor(colorm::Rgb&, colorm::Rgb);
-void grayscaleColor(colorm::Rgb&);
-void grayscaleColor(colorm::Rgb&, int);
-
-sf::Vector2u vec2u(int x, int y) {
+/*sf::Vector2u vec2u(int x, int y) {
     return sf::Vector2u((unsigned int)x, (unsigned int)y);
 }
 sf::Color sfColor(colorm::Rgb color) {
     return sf::Color(color.red8(), color.green8(), color.blue8());
-}
+}*/
+#define vec2u(x, y) sf::Vector2u((unsigned int)x, (unsigned int)y)
+#define sfColor(color) sf::Color(color.red8(), color.green8(), color.blue8())
 
 int tintMain() {
     sf::RenderWindow window;

@@ -1,20 +1,21 @@
-#define TINT
+#define RUN_FLUID
 
-#ifdef TINT
-#include "tint.cpp"
+#ifdef RUN_TINT
+#include "tint.h"
 #endif
 
-#ifdef FLUID
-#include "fluid.cpp"
+#ifdef RUN_FLUID
+#include "fluidsim.h"
 #endif
+
 
 int main() {
 
-    #ifdef TINT
+    #ifdef RUN_TINT
     tintMain();
     #endif
 
-    #ifdef FLUID
+    #ifdef RUN_FLUID
     fluidMain();
     #endif
 
