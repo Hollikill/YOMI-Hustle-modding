@@ -2,7 +2,7 @@
 
 ## Mirror+
 
-![mirrorplusthumbnail](https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/Mirror%2B%20Mod%20Resources/yomimirrorthumbnailv2.png)
+<img src="https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/Mirror%2B%20Mod%20Resources/yomimirrorthumbnailv2.png" width=50% height=50%>
 
 A mod that allows you to mirror your opponent's selection of character and style, with toggle options for each.
 
